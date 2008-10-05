@@ -2,9 +2,10 @@ Summary:	Vifm is a ncurses based file manager with vi like keybindings
 Summary(hu.UTF-8):	Vifm egy ncurses-alapú fájlkezelő vi-szerű billentyűzetkombinációkkal.
 Name:		vifm
 Version:	0.4
-Release:	0.1
+Release:	1
 License:	GPL
 Patch0:		%{name}-fix-datadir.patch
+Patch1:		%{name}-use_malloc.patch
 Group:		Applications/Shells
 Source0:	http://dl.sourceforge.net/vifm/%{name}-%{version}.tar.bz2
 # Source0-md5:	645071e1449d44d7957b78c1c094e454
@@ -21,7 +22,7 @@ Vifm egy ncurses-alapú fájlkezelő vi-szerű billentyűzetkombinációkkal.
 %prep
 %setup -q
 %patch0 -p1
-
+%patch1 -p1
 
 %build
 %{__aclocal}
