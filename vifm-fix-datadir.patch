@@ -1,0 +1,13 @@
+--- vifm-0.4/src/config.c-orig	2008-10-05 20:35:56.000000000 +0200
++++ vifm-0.4/src/config.c	2008-10-05 20:37:04.000000000 +0200
+@@ -16,8 +16,8 @@
+  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
+  */
+ 
+-#define CP_HELP "cp /usr/local/share/vifm/vifm-help.txt ~/.vifm"
+-#define CP_RC "cp /usr/local/share/vifm/vifmrc ~/.vifm"
++#define CP_HELP "cp /usr/share/vifm/vifm-help.txt ~/.vifm"
++#define CP_RC "cp /usr/share/vifm/vifmrc ~/.vifm"
+ 
+ #include<stdio.h> /* FILE */
+ #include<stdlib.h> /* getenv */
