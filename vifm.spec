@@ -9,7 +9,14 @@ Group:		Applications/Shells
 Source0:	http://dl.sourceforge.net/vifm/%{name}-%{version}.tar.bz2
 # Source0-md5:	b95229d69efd66ac1e148b1a454f1c97
 URL:		http://vifm.sourceforge.net/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	glib2-devel
+BuildRequires:	libmagic-devel
+BuildRequires:	libtool
 BuildRequires:	ncurses-devel
+BuildRequires:	pkgconfig
+BuildRequires:	xorg-lib-libX11-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -32,6 +39,7 @@ ncurses.
 %{__autoconf}
 %{__automake}
 %configure \
+	HAVE_FILE_PROG=1 \
 	--disable-static
 %{__make}
 
