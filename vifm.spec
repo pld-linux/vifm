@@ -6,9 +6,9 @@ Version:	0.14.3
 Release:	1
 License:	GPL v2
 Group:		Applications/Shells
-Source0:	http://dl.sourceforge.net/vifm/%{name}-%{version}.tar.bz2
+Source0:	https://downloads.sourceforge.net/vifm/%{name}-%{version}.tar.bz2
 # Source0-md5:	11950e7e3f58b4f25d7cab000cdffb56
-URL:		http://vifm.sourceforge.net/
+URL:		https://vifm.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	coreutils >= 7.6
