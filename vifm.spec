@@ -4,11 +4,11 @@ Summary(pl.UTF-8):	Menedżer plików oparty o ncurses obsługiwany komendami zac
 Name:		vifm
 Version:	0.14.3
 Release:	1
-License:	GPL v2
+License:	GPL v2+
 Group:		Applications/Shells
 Source0:	https://downloads.sourceforge.net/vifm/%{name}-%{version}.tar.bz2
 # Source0-md5:	11950e7e3f58b4f25d7cab000cdffb56
-URL:		https://vifm.sourceforge.net/
+URL:		https://vifm.info/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	coreutils >= 7.6
@@ -49,7 +49,6 @@ ncurses.
 	--disable-silent-rules
 %{__make}
 
-
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -61,7 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README TODO
+%doc AUTHORS COPYING.3party ChangeLog FAQ NEWS README TODO
 %dir %{_sysconfdir}/vifm
 %dir %{_sysconfdir}/vifm/colors
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/vifm/colors/Default-256.vifm
