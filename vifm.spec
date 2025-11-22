@@ -9,8 +9,6 @@ Group:		Applications/Shells
 Source0:	https://downloads.sourceforge.net/vifm/%{name}-%{version}.tar.bz2
 # Source0-md5:	11950e7e3f58b4f25d7cab000cdffb56
 URL:		https://vifm.info/
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	coreutils >= 7.6
 BuildRequires:	glib2-devel
 BuildRequires:	groff
@@ -40,10 +38,6 @@ ncurses.
 %{__sed} -i -e '1s,/usr/bin/env perl,%{__perl},' src/vifm-convert-dircolors
 
 %build
-%{__aclocal}
-%{__libtoolize}
-%{__autoconf}
-%{__automake}
 %configure \
 	HAVE_FILE_PROG=1 \
 	--disable-silent-rules
