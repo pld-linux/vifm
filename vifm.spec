@@ -3,11 +3,12 @@ Summary(hu.UTF-8):	Vifm egy ncurses-alapú fájlkezelő vi-szerű billentyűzetk
 Summary(pl.UTF-8):	Menedżer plików oparty o ncurses obsługiwany komendami zaczerpniętymi z vi.
 Name:		vifm
 Version:	0.14.3
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Shells
 Source0:	https://downloads.sourceforge.net/vifm/%{name}-%{version}.tar.bz2
 # Source0-md5:	11950e7e3f58b4f25d7cab000cdffb56
+Patch0:		content-type.patch
 URL:		https://vifm.info/
 BuildRequires:	coreutils >= 7.6
 BuildRequires:	glib2-devel
@@ -34,6 +35,7 @@ ncurses.
 
 %prep
 %setup -q
+%patch -P0 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env perl,%{__perl},' src/vifm-convert-dircolors
 

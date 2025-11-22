@@ -1,0 +1,83 @@
+From 5782270ada10ec2d93ab773cae4ab4e9b31a40f3 Mon Sep 17 00:00:00 2001
+From: Jan Palus <jpalus@fastmail.com>
+Date: Fri, 21 Nov 2025 00:44:10 +0100
+Subject: [PATCH] Fallback to fast content type in glib mime type detection
+
+to determine content type glib checks xdg mime info database for entries
+matching file extension. in simplest case there is a single match which
+becomes file's content type. there are cases however when multiple
+matches are found ie `*.png` files match both `PNG image (image/png)` as
+well as `Animated PNG image (image/apng)`:
+
+https://gitlab.freedesktop.org/xdg/shared-mime-info/-/blob/2.4/data/freedesktop.org.xml.in#L5513-5535
+
+in order to decide between multple choices glib tries to match magic
+bytes if file data is available. for local files (implementation
+provided by glib) data is usually readily available and selection
+mechanism works fine. even if for some reason data cannot be obtained
+(no real path to file is provided) one of the multiple choices is
+picked. however remote files (implementation provided by gvfs) end up
+without `standard::content-type` leading to vfim crash:
+
+https://gitlab.gnome.org/GNOME/gvfs/-/blob/1.58.0/daemon/gvfsbackendsmb.c#L1542-1543
+
+Mismatch between glib and gvfs behavior was already raised upstream:
+
+https://gitlab.gnome.org/GNOME/gvfs/-/issues/822
+
+in the meantime however let's introduce two improvements:
+
+1. don't crash if for whatever reason content type is missing
+2. fallback to `standard::fast-content-type` if `standard::content-type`
+   is missing as both glib and gvfs provide it
+
+Fixes #1114
+---
+ configure.ac         |  3 ++-
+ src/int/file_magic.c | 21 +++++++++++++++++++--
+ 2 files changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/src/int/file_magic.c b/src/int/file_magic.c
+index 5aff3ac36..37e7b8738 100644
+--- a/src/int/file_magic.c
++++ b/src/int/file_magic.c
+@@ -180,6 +180,13 @@ get_gtk_mimetype(const char filename[], char buf[], size_t buf_sz)
+ #ifdef HAVE_GLIB
+ 	GFile *file;
+ 	GFileInfo *info;
++	int result;
++	static const char *attrs[] = {
++		G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
++		G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE,
++		NULL
++	};
++	const char **attr;
+ 
+ 	file = g_file_new_for_path(filename);
+ 	info = g_file_query_info(file, "standard::", G_FILE_QUERY_INFO_NONE, NULL,
+@@ -190,10 +197,20 @@ get_gtk_mimetype(const char filename[], char buf[], size_t buf_sz)
+ 		return -1;
+ 	}
+ 
+-	copy_str(buf, buf_sz, g_file_info_get_content_type(info));
++	result = -1;
++	for(attr = attrs; *attr != NULL; ++attr)
++	{
++		if(g_file_info_has_attribute(info, *attr))
++		{
++			copy_str(buf, buf_sz, g_file_info_get_attribute_string(info, *attr));
++			result = 0;
++			break;
++		}
++	}
++
+ 	g_object_unref(info);
+ 	g_object_unref(file);
+-	return 0;
++	return result;
+ #else /* #ifdef HAVE_GLIB */
+ 	return -1;
+ #endif /* #ifdef HAVE_GLIB */
+-- 
+2.52.0
+
